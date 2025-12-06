@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.local
+*.env
+/.cache
+/.DS_Store
+backend/node_modules/
+frontend/node_modules/
+electron/node_modules/
+*.log

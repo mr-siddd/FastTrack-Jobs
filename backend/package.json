@@ -1,0 +1,34 @@
+{
+  "name": "fasttrack-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc -p .",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.5.0",
+    "@modelcontextprotocol/sdk": "^1.23.0",
+    "axios": "^1.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.2.0",
+    "fastify": "^4.0.0",
+    "openai": "^4.0.0",
+    "pino": "^8.0.0",
+    "playwright": "^1.40.0",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.0"
+  },
+  "description": "This folder contains a TypeScript Fastify backend that orchestrates AI and Playwright MCP interactions.",
+  "main": "server.js",
+    "@modelcontextprotocol/sdk": "^1.4.0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

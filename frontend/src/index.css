@@ -1,0 +1,323 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Neutral color palette */
+  --color-bg-primary: #f8f7f5;
+  --color-bg-secondary: #ffffff;
+  --color-text-primary: #2d2520;
+  --color-text-secondary: #6b6360;
+  --color-border: #e8e5e0;
+  --color-accent: #5a7c6c;
+  --color-accent-dark: #4a6a5a;
+  --color-accent-light: #7a9c8c;
+  --color-error: #c85a54;
+  --color-success: #5a9a6c;
+  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  line-height: 1.6;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+}
+
+.app-header {
+  background-color: var(--color-bg-secondary);
+  padding: 3rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-light);
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.app-header p {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+}
+
+.app-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.form-section {
+  background-color: var(--color-bg-secondary);
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  margin-bottom: 2rem;
+}
+
+.job-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 1rem;
+}
+
+.url-input {
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  background-color: #fafaf8;
+  transition: all 0.2s ease;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-secondary);
+  box-shadow: 0 0 0 3px rgba(90, 124, 108, 0.1);
+}
+
+.url-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit-btn {
+  padding: 0.875rem 1.5rem;
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--color-accent-dark);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error-section {
+  background-color: #fde8e6;
+  border: 1px solid #e8b8b3;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.error-message {
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.job-data-section {
+  background-color: var(--color-bg-secondary);
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-medium);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.job-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.job-header h2 {
+  font-size: 2rem;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.job-company {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+}
+
+.job-section {
+  margin-bottom: 2rem;
+}
+
+.job-section h3 {
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.job-section p {
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+}
+
+.job-section ul {
+  list-style: none;
+  margin-left: 0;
+}
+
+.job-section li {
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.job-section li:before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-tag {
+  background-color: #e8f0ed;
+  color: var(--color-accent-dark);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid var(--color-accent-light);
+}
+
+.skill-tag--secondary {
+  background-color: #f0f0ed;
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
+}
+
+.job-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.action-btn {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.action-btn--primary {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.action-btn--primary:hover {
+  background-color: var(--color-accent-dark);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.action-btn--secondary {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+}
+
+.action-btn--secondary:hover {
+  background-color: #e8f0ed;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-header h1 {
+    font-size: 1.875rem;
+  }
+
+  .app-main {
+    padding: 1rem;
+  }
+
+  .form-section,
+  .job-data-section {
+    padding: 1.5rem;
+  }
+
+  .job-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .job-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+}
