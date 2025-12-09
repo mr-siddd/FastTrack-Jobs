@@ -5,20 +5,26 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p .",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test:resume": "ts-node-dev --transpile-only src/services/resume/test.ts"
   },
   "dependencies": {
     "@fastify/cors": "^8.5.0",
+    "@langchain/core": "^1.1.4",
+    "@langchain/google-genai": "^2.0.4",
+    "@langchain/openai": "^1.1.3",
     "@modelcontextprotocol/sdk": "^1.23.0",
+    "@paralleldrive/cuid2": "^3.0.4",
     "axios": "^1.5.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^5.2.0",
     "fastify": "^4.0.0",
+    "langchain": "^1.1.5",
     "openai": "^4.0.0",
     "pino": "^8.0.0",
     "playwright": "^1.40.0",
-    "zod": "^3.0.0"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -27,7 +33,7 @@
   },
   "description": "This folder contains a TypeScript Fastify backend that orchestrates AI and Playwright MCP interactions.",
   "main": "server.js",
-    "@modelcontextprotocol/sdk": "^1.4.0",
+  "@modelcontextprotocol/sdk": "^1.4.0",
   "keywords": [],
   "author": "",
   "license": "ISC"

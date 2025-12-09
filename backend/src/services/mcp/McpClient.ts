@@ -5,22 +5,10 @@ let callTool: null | ((name: string, params?: any) => Promise<any>) = null;
 
 async function initMcpOnce() {
   if (mcpClient && callTool) return;
-  try {
-    const sdkClientMod: any = await import('@modelcontextprotocol/sdk/client');
-    const transportMod: any = await import('@modelcontextprotocol/sdk/transport/node');
-    const { Client } = sdkClientMod;
-    const { NodeStdioTransport } = transportMod;
-    const transport = new NodeStdioTransport({
-      command: 'npx',
-      args: ['@playwright/mcp@latest'],
-    });
-    mcpClient = new Client({ transport });
-    callTool = (name: string, params?: any) => (mcpClient as any).callTool(name, params);
-  } catch (e) {
-    // If MCP SDK not available or fails, we'll fallback to direct Playwright
-    mcpClient = null;
-    callTool = null;
-  }
+  // For now, skip MCP SDK initialization and use direct Playwright
+  // This avoids import path issues with @modelcontextprotocol/sdk
+  mcpClient = null;
+  callTool = null;
 }
 
 type ExtractedJD = {
@@ -73,6 +61,9 @@ export default class McpClient {
       }
     }
 
+    // Click expand buttons (Show More, View More, etc.)
+    await this.clickExpandButtons(page);
+
     const selectors = ['article', '.job-description', '.job-desc', '#job-description', '.description', 'main'];
     let text = '';
     for (const s of selectors) {
@@ -97,5 +88,50 @@ export default class McpClient {
   async applyToJob(_data: any) {
     // Placeholder: full apply flow to be implemented once toolset is finalized
     return { success: false, message: 'Apply via MCP not implemented yet' };
+  }
+
+  /**
+   * Click all "Show More", "View More" buttons to expand content
+   * Returns the number of buttons clicked
+   */
+  private async clickExpandButtons(page: any): Promise<number> {
+    const expandButtonSelectors = [
+      'button:has-text("Show more")',
+      'button:has-text("View more")',
+      'button:has-text("Read more")',
+      'button:has-text("See more")',
+      'button:has-text("Expand")',
+      'a:has-text("Show more")',
+      'a:has-text("View more")',
+      '.jobs-description__footer-button',
+      '[aria-label="Show more"]',
+      '[aria-label="View more"]',
+      '.show-more-button',
+      '.expand-button',
+      '.read-more',
+    ];
+
+    let clickedCount = 0;
+
+    for (const selector of expandButtonSelectors) {
+      try {
+        const button = await page.$(selector);
+        if (button) {
+          const isVisible = await button.isVisible();
+          if (isVisible) {
+            await button.click();
+            clickedCount++;
+            console.log(`[McpClient] Clicked expand button: ${selector}`);
+            await page.waitForTimeout(500); // Wait for content to load
+          }
+        }
+      } catch (error) {
+        // Button not found or not clickable, continue
+        continue;
+      }
+    }
+
+    console.log(`[McpClient] Clicked ${clickedCount} expand buttons`);
+    return clickedCount;
   }
 }

@@ -1,0 +1,27 @@
+import { z } from "zod";
+import { defaultItem, defaultUrl, itemSchema, urlSchema } from "../shared";
+
+/**
+ * Publication schema - Published works
+ * Contains publication name, publisher, date, and summary
+ */
+export const publicationSchema = itemSchema.extend({
+  name: z.string(),
+  publisher: z.string(),
+  date: z.string(),
+  summary: z.string(),
+  url: urlSchema,
+});
+
+// Type
+export type Publication = z.infer<typeof publicationSchema>;
+
+// Defaults
+export const defaultPublication: Publication = {
+  ...defaultItem,
+  name: "",
+  publisher: "",
+  date: "",
+  summary: "",
+  url: defaultUrl,
+};
