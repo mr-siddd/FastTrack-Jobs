@@ -9,8 +9,10 @@ import jobAgentRoutes from './routes/job-agent';
 
 // Log environment variables status
 console.log('[Server] Environment variables loaded:');
-console.log(`  GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? '✅ Set' : '❌ Missing'}`);
+console.log(`  DEFAULT_AI_PROVIDER: ${process.env.DEFAULT_AI_PROVIDER || 'auto (will use Copilot Proxy)'}`);
+console.log(`  COPILOT_PROXY_URL: ${process.env.COPILOT_PROXY_URL || 'http://localhost:3016 (default)'}`);
 console.log(`  OPENAI_API_KEY: ${process.env.OPENAI_API_KEY ? '✅ Set' : '❌ Missing'}`);
+console.log(`  GEMINI_API_KEY: ${process.env.GEMINI_API_KEY ? '✅ Set' : '❌ Missing'}`);
 console.log(`  PORT: ${process.env.PORT || '4000 (default)'}`);
 
 const server = Fastify({ logger: true });

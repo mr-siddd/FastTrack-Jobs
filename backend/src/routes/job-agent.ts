@@ -19,7 +19,7 @@ const processJobRequestSchema = z.object({
   options: z.object({
     autoApply: z.boolean().optional().default(false),
     generatePDF: z.boolean().optional().default(true),
-    aiProvider: z.enum(["openai", "gemini", "auto"]).optional().default("auto"),
+    aiProvider: z.enum(["openai", "gemini", "copilot-proxy", "auto"]).optional().default("copilot-proxy"),
   }).optional(),
 });
 

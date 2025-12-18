@@ -6,7 +6,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p .",
     "start": "node dist/server.js",
-    "test:resume": "ts-node-dev --transpile-only src/services/resume/test.ts"
+    "test:resume": "ts-node-dev --transpile-only src/services/resume/test.ts",
+    "test:copilot": "ts-node-dev --transpile-only src/test-copilot-proxy.ts"
   },
   "dependencies": {
     "@fastify/cors": "^8.5.0",

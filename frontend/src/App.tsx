@@ -207,7 +207,8 @@ function App() {
         jobUrl,
         userResume: sampleResume,
         options: {
-          aiProvider: 'gemini', // Use free Gemini by default
+         // aiProvider: 'gemini', // Use free Gemini by default
+         aiProvider: 'copilot-proxy', // Use Claude Sonnet 4.5 via GitHub Copilot Pro
           generatePDF: true,
           autoApply: false // Don't auto-apply yet
         }
