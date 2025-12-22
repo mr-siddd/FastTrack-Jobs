@@ -6,16 +6,20 @@
 
 ## 📋 Table of Contents
 
-- [Project Structure](#project-structure)
-- [LangGraph Approach](#langgraph-approach)
-- [Modules](#modules)
+- [Project Structure](#-project-structure)
+- [LangGraph Approach](#-langgraph-approach)
+- [Modules](#-modules)
 - [Technology Stack](#️-technology-stack)
+- [Service Details](#-service-details-ai-integration)
 - [Getting Started](#-getting-started)
-- [Development](#development)
-- [API Reference](#api-reference)
+- [Development](#-development)
+- [Module Ports](#-module-ports)
+- [Linting & Type Checking](#-linting--type-checking)
+- [API Reference](#-api-reference)
+- [Development Notes](#-development-notes)
 - [Contributing](#-contributing)
-- [Next Steps](#next-steps)
-- [License](#license)
+- [Next Steps](#️-next-steps)
+- [License](#-license)
 
 ---
 
@@ -44,7 +48,7 @@
 │         ▼                 ▼                 ▼               │
 │  ┌──────────┐      ┌──────────┐      ┌──────────┐         │
 │  │ OpenAI   │      │ Copilot  │      │   MCP    │         │
-│  ⚡│ Adapter  │      │  Proxy   │      │  Client  │         │
+│  │ Adapter  │      │  Proxy   │      │  Client  │         │
 │  └──────────┘      └──────────┘      └──────────┘         │
 │                                             │               │
 └─────────────────────────────────────────────┼───────────────┘
@@ -53,15 +57,15 @@
                                     │ Playwright MCP   │
                                     │     Server       │
                                     └────────┬─────────┘
----
-
-## 📦 Modules
-
-### 🎨                                   [Real Browser]
+                                             │
+                                             ▼
+                                      [Real Browser]
                              Extract JD, fill forms, upload PDF
 ```
 
-### LangGraph Approach
+---
+
+## ⚡ LangGraph Approach
 
 This project uses **LangGraph** for workflow orchestration with a **Node and State Graph** architecture:
 
@@ -70,34 +74,40 @@ This project uses **LangGraph** for workflow orchestration with a **Node and Sta
 - **Conditional Edges**: Route workflow based on state (e.g., skip AutoApply if PDF generation fails)
 - **Workflow Orchestration**: Ensures proper sequencing and error handling across the job application pipeline
 
-## Modules
+---
 
-### Frontend Module
+## 📦 Modules
+
+### 🎨 Frontend Module
+
 - **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
 - **UI Components**: Custom components with CSS modules
 - **State Management**: React hooks
 - **HTTP Client**: Fetch API
-- **⚙️ Features**: Job URL input, JD display, resume generation, application tracking dashboard
+- **Features**: Job URL input, JD display, resume generation, application tracking dashboard
 
-### Backend Module
+### ⚙️ Backend Module
+
 - **Runtime**: Node.js 20+
 - **Framework**: Fastify (high-performance web framework)
 - **Language**: TypeScript
 - **Workflow Engine**: LangGraph for state-based orchestration
+- **Architecture**: Modular services with dependency injection
+
 ---
 
-## 🛠️*Architecture**: Modular services with dependency injection
+## 🛠️ Technology Stack
 
-### Technology Stack
+### Frontend Technologies
 
-**Frontend Technologies:**
 - React 18
 - TypeScript
 - Vite
 - CSS3
 
-**Backend Technologies:**
+### Backend Technologies
+
 - Node.js 20+
 - TypeScript
 - Fastify
@@ -105,21 +115,23 @@ This project uses **LangGraph** for workflow orchestration with a **Node and Sta
 - Zod (schema validation)
 - Playwright (browser automation)
 
-**AI Integration:**
+### AI Integration
+
 - OpenAI API (GPT-4)
 - Copilot Proxy Adapter
 - MCP (Model Context Protocol)
 
-**Development Tools:**
+### Development Tools
+
+- tsx (TypeScript execution)
+- ESBuild
+- Playwright browsers
+
 ---
 
-## 🤖 Service Details: AI Integration (Workflow Orchestration)
+## 🤖 Service Details: AI Integration
 
 ### LangGraph Workflow Engine
-
-## Service Details: AI Integration (Workflow Orchestration)
-
-### LangGraph Workflow
 
 The backend uses **LangGraph** to orchestrate the job application process through a state graph:
 
@@ -147,6 +159,108 @@ The backend uses **LangGraph** to orchestrate the job application process throug
 **5. AutoApplyNode**
 - Navigates to job application page via MCP
 - Detects form fields and constraints
+- Fills fields with resume data (respecting maxLength)
+- Uploads generated PDF
+- Submits application
+- Outputs: `applicationStatus`
+
+**State Management:**
+
+```typescript
+interface JobApplicationState {
+  jobId: string;
+  jobUrl: string;
+  rawJobText?: string;
+  jd?: JobDescription;
+  resumeJson?: ResumeData;
+  tailoredResumeJson?: ResumeData;
+  resumePdfPath?: string;
+  applicationStatus?: 'pending' | 'applied' | 'failed';
+  error?: string;
+}
+```
+
+**Conditional Routing:**
+- If extraction fails → skip to error state
+- If PDF generation fails → skip AutoApply
+- If AutoApply disabled → return after PDF generation
+
+---
+
+## 🚀 Getting Started
+
+### Quick Start (Recommended)
+
+Want to start quickly without heavy dependencies? See [docs/MINIMAL_START.md](backend/README.md) for a lightweight setup that skips Playwright and AI SDKs. You can add them back later when needed.
+
+### Prerequisites
+
+**System Requirements:**
+- Node.js >= 18.0.0 (tested with 22.14.0)
+- Yarn >= 1.22.0
+- Windows/Linux/macOS
+- Minimum 4GB RAM
+
+**API Keys:**
+- OpenAI API key (required)
+- Copilot API access (optional, for Copilot Proxy)
+
+### Installation
+
+1. **Clone the repository:**
+
+```bash
+git clone <repository-url>
+cd FastTrackJobs
+```
+
+2. **Install dependencies:**
+
+```bash
+# Clean install (if upgrading from previous version)
+rm -rf node_modules yarn.lock
+
+# Install
+yarn install
+```
+
+This will install all dependencies for the root project and all workspaces (modules).
+
+> **Note:** Heavy dependencies (Puppeteer, Playwright, AI SDKs) have been removed from the minimal version. See [docs/MINIMAL_START.md](backend/README.md) for details.
+
+### ⚙️ Configuration
+
+Create `backend/.env` file:
+
+```env
+# Required
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Optional
+PORT=4000
+START_MCP=false
+APP_STORAGE_DIR=C:\Users\YourName\.fasttrack
+MCP_BASE=http://127.0.0.1:9222
+COPILOT_PROXY_URL=http://localhost:5000
+
+# LangGraph Configuration
+ENABLE_AUTO_APPLY=false
+MAX_RETRY_ATTEMPTS=3
+```
+
+**Configuration Options:**
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `OPENAI_API_KEY` | OpenAI API key | (required) |
+| `PORT` | Backend port | 4000 |
+| `START_MCP` | Auto-start bundled MCP server | false |
+| `APP_STORAGE_DIR` | PDF storage directory | `~/.fasttrack` |
+| `MCP_BASE` | MCP server base URL | http://127.0.0.1:9222 |
+| `COPILOT_PROXY_URL` | Copilot proxy endpoint | - |
+| `ENABLE_AUTO_APPLY` | Enable automated application submission | false |
+| `MAX_RETRY_ATTEMPTS` | Max retries for failed nodes | 3 |
+
 ---
 
 ## 💻 Development
@@ -160,15 +274,63 @@ yarn dev
 
 Or start individual modules:
 
-### Frontend Development Server
-- Outputs: `applicationStatus`
-# Development
-
-**Backend Development Server:**
+### Backend Development Server
 
 ```powershell
 cd backend
 npm run dev
+```
+
+Backend runs on http://127.0.0.1:4000
+
+### Frontend Development Server
+
+```powershell
+cd frontend
+npm run dev
+```
+
+Frontend runs on http://localhost:5173 (Vite default)
+
+### Electron App (Desktop)
+
+```powershell
+cd electron
+npm start
+```
+
+---
+
+## 🔌 Module Ports
+
+| Module | Port | URL |
+|--------|------|-----|
+| Frontend (Vite) | 5173 | http://localhost:5173 |
+| Backend (Fastify) | 4000 | http://127.0.0.1:4000 |
+| Copilot Proxy (optional) | 5000 | http://localhost:5000 |
+| Playwright MCP (stdio) | - | stdio transport |
+| Electron (future) | - | Desktop app |
+
+---
+
+## 🔍 Linting & Type Checking
+
+### Backend
+
+```powershell
+cd backend
+npm run type-check   # TypeScript type checking
+npm run lint         # ESLint
+npm run format       # Prettier
+```
+
+### Frontend
+
+```powershell
+cd frontend
+npm run type-check   # TypeScript type checking
+npm run lint         # ESLint
+npm run format       # Prettier
 ```
 
 ---
@@ -210,8 +372,6 @@ Generate tailored resume PDF from job description.
 
 **Request:**
 ```json
----
-
 {
   "resumeJson": { "name": "...", "contact": {...}, ... },
   "jd": { "title": "...", "company": "..." }
@@ -250,47 +410,6 @@ Auto-apply to job with tailored resume.
 ```
 
 ---
----
-
-### 📁
-## 🎯 Technology Stack127.0.0.1:4000
-
-**Frontend Development Server:**
-
-```powershell
-cd frontend
-npm run dev
-```
-
-Frontend runs on http://localhost:5173 (Vite default)
-
-**R🛠️ Technology Stack
-
-### Frontend
-- **React 18** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **CSS Modules** - Scoped styling
-- **Fetch API** - HTTP client
-
-### Backend
-- **Node.js 20+** - Runtime environment
-- **Fastify** - High-performance web framework
-- **TypeScript** - Type-safe development
-- **LangGraph** - Workflow orchestration engine
-- **Zod** - Runtime schema validation
-
-### AI & Automation
-- **OpenAI GPT-4** - Resume tailoring and JD parsing
-- **Copilot Proxy** - Alternative AI provider
-- **Playwright** - Browser automation
-- **MCP SDK** - Model Context Protocol integration
-
-### Development Tools
-- **tsx** - TypeScript execution
-- **ESBuild** - Fast bundling
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
 
 ## 📝 Development Notes
 
@@ -301,7 +420,50 @@ The project uses a **state graph** pattern for workflow management:
 ```typescript
 // State flows through nodes
 ExtractJDNode → ParseJDNode → TailorResumeNode → GeneratePDFNode → AutoApplyNode
-  # MCP Integration
+                     ↓ (on error)
+                  Error Handler
+```
+
+**Key Design Patterns:**
+- **Immutable State**: Each node returns a new state object
+- **Type Safety**: Full TypeScript support with Zod validation
+- **Error Handling**: Conditional edges handle failures gracefully
+- **Retry Logic**: Configurable retry attempts per node
+- **Logging**: Comprehensive logs for debugging workflow
+
+### AI Provider Abstraction
+
+The backend supports multiple AI providers through adapters:
+
+```typescript
+interface AIProvider {
+  chat(messages: Message[]): Promise<string>;
+  structuredOutput<T>(prompt: string, schema: ZodSchema<T>): Promise<T>;
+}
+```
+
+**Supported Providers:**
+- OpenAI Adapter
+- Copilot Proxy Adapter
+- (Future: Anthropic, Gemini)
+
+### Resume Schema
+
+Built with Zod for runtime validation:
+- Basics: name, contact, summary
+- Sections: experience, education, skills, projects, certifications
+- Metadata: custom sections, timestamps
+- Validation: email format, URL format, date ranges
+
+### PDF Generation
+
+Uses Playwright's PDF rendering:
+- HTML templates with professional styling
+- Print media queries for PDF optimization
+- Consistent fonts and spacing
+- File naming: `Name_Position_Company.pdf`
+
+### MCP Integration
 
 Model Context Protocol integration for browser automation:
 
@@ -332,7 +494,7 @@ const snapshot = await client.callTool({
 
 **Fallback Strategy**: If MCP SDK fails, uses direct Playwright for compatibility.
 
-### File Structure
+### 📁 File Structure
 
 ```
 backend/
@@ -372,180 +534,8 @@ frontend/
 electron/
   main.js                                # Electron main process (future)
 ```
-cd frontend
-npm install
 
-# Install Playwright browsers (required for MCP)
-cd .⚙️ Configuration
-
-Create `backend/.env` file
-
-### Configuration
-
-Create `backend/.env`:
-
-```env
-# Required
-OPENAI_API_KEY=your_openai_api_key_here
-
-# Optional
-PORT=4000
-START_MCP=false
-APP_STORAGE_DIR=C:\Users\YourName\.fasttrack
-MCP_BASE=http://127.0.0.1:9222
-COPILOT_PROXY_URL=http://localhost:5000
-
-# LangGraph Configuration
-ENABLE_AUTO_APPLY=false
-MAX_RETRY_ATTEMPTS=3
-```
-
-**Configuration Options:**
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `OPENAI_API_KEY` | OpenAI API key | (required) |
-| `PORT` | Backend port | 4000 |
-| `START_MCP` | Auto-start bundled MCP server | false |
-| `APP_STORAGE_DIR` | PDF storage directory | `~/.fasttrack` |
-| `MCP_BASE` | MCP server base URL | http://127.0.0.1:9222 |
-| `COPILOT_PROXY_URL` | Copilot proxy endpoint | - |
-| `ENABLE_AUTO_APPLY` | Enable automated application submission | false |
-| `MAX_RETRY_ATTEMPTS` | Max retries for failed nodes | 3 |
-
-## API Reference
-
-### POST /api/extract-job
-
-**Request:**
-```json
-{ "jobUrl": "https://example.com/job" }
-```
-
-**Response:**
-```json
-{
-  "jobId": "job-1234567890",
-  "url": "https://example.com/job",
-  "jd": {
-    "title": "Software Engineer",
-    "company": "ExampleCorp",
-    "location": "Remote",
-    "responsibilities": ["Build features", "..."],
-    "requiredSkills": ["TypeScript", "React"],
-    "niceToHaveSkills": ["GraphQL"],
-    "summary": "..."
-  },
-  "rawText": "..."
-}
-```
-
-### POST /api/generate-resume
-
-**Request:**
-```json
-{
-  "resumeJson": { "name": "...", "contact": {...}, ... },
-  "jd": { "title": "...", "company": "..." }
-}
-```
-
-**Response:**
-```json
-{
-  "resumeJson": { ... },
-  "resumePdfPath": "C:\\Users\\You\\.fasttrack\\YourName_SoftwareEngineer_Company.pdf",
-  "resumePdfUrl": "file://C:\\Users\\You\\.fasttrack\\YourName_SoftwareEngineer_Company.pdf"
-}
-```
-
-### POST /api/apply
-
-**Request:**
-```json
 ---
-
-{
-  "jobUrl": "https://example.com/job",
-  "resumeJson": { ... },
-  "resumePdfPath": "C:\\Users\\You\\.fasttrack\\..."
-}
-```
-
-**Response:**
-```json
-{
-  "taskId": "task-1234567890",
-  "status": "started",
-  "message": "Application process initiated"
-}
-```
-
-## API Reference
-
-### POST /api/extract-job
-
-**Request:**
-```json
-{ "jobUrl": "https://example.com/job" }
-```
-
-**Response:**
-```json
-{
-  "jobId": "job-1234567890",
-  "url": "https://example.com/job",
-  "jd": {
-    "title": "Software Engineer",
-    "company": "ExampleCorp",
-    "location": "Remote",
-    "responsibilities": ["Build features", "..."],
-    "requiredSkills": ["TypeScript", "React"],
-    "niceToHaveSkills": ["GraphQL"],
-    "summary": "..."
-  },
-  "rawText": "..."
-}
-```
-
-### POST /api/generate-resume
-
-**Request:**
-```json
-{
-  "resumeJson": { "name": "...", "contact": {...}, ... },
-  "jd": { "title": "...", "company": "..." }
-}
-```
-
-**Response:**
-```json
-{
-  "resumeJson": { ... },
-  "resumePdfPath": "C:\\Users\\You\\.fasttrack\\YourName_SoftwareEngineer_Company.pdf",
-  "resumePdfUrl": "file://C:\\Users\\You\\.fasttrack\\YourName_SoftwareEngineer_Company.pdf"
-}
-```
-
-### POST /api/apply
-
-**Request:**
-```json
-{
-  "jobUrl": "https://example.com/job",
-  "resumeJson": { ... },
-  "resumePdfPath": "C:\\Users\\You\\.fasttrack\\..."
-}
-```
-
-**Response:**
-```json
-{
-  "taskId": "task-1234567890",
-  "status": "started",
-  "message": "Application process initiated"
-}
-```
 
 ## 🤝 Contributing
 
@@ -577,23 +567,25 @@ This is a **modular architecture** designed for scalability. When adding feature
 ### Code Standards
 
 - Use TypeScript strict mode
----
-
-## 🗺️Follow ESLint and Prettier configurations
+- Follow ESLint and Prettier configurations
 - Write JSDoc comments for public APIs
 - Use async/await over promises
 - Handle errors gracefully with try/catch
 - Log meaningful messages for debugging
 
-## Next Steps
+---
+
+## 🗺️ Next Steps
 
 ### 1. Refine Resume Formatting Guidelines
+
 - [ ] Enhance `resume-formatting-guidelines.ts` with industry-specific templates
 - [ ] Add ATS (Applicant Tracking System) optimization rules
 - [ ] Implement dynamic formatting based on JD requirements
 - [ ] Support multiple resume formats (chronological, functional, hybrid)
 
 ### 2. Resume PDF Format and Template
+
 - [ ] Design professional PDF templates with customizable themes
 - [ ] Add support for multiple column layouts
 - [ ] Implement print-optimized CSS with proper page breaks
@@ -601,6 +593,7 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] Support custom fonts and color schemes
 
 ### 3. Playwright MCP Integration for Auto-Apply and Retry Features
+
 - [ ] Complete `AutoApplyNode.ts` implementation
 - [ ] Add intelligent form field detection (text, dropdown, checkbox, file upload)
 - [ ] Implement retry logic with exponential backoff
@@ -609,6 +602,7 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] Support multi-page application flows
 
 ### 4. Adding Intelligence to Answer Questions and Form Fields
+
 - [ ] Integrate AI to generate answers for common application questions
 - [ ] Build a knowledge base from resume data for contextual responses
 - [ ] Implement field constraint validation (maxLength, regex patterns)
@@ -616,6 +610,7 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] Support conditional question logic (show/hide based on previous answers)
 
 ### 5. Job Application Submission Notifications
+
 - [ ] Implement success/failure notifications with format: `Company_Designation`
   - Example: `Google_Software_Developer_L3 - Application Submitted ✓`
 - [ ] Add desktop notifications via Electron
@@ -624,6 +619,7 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] Store submission timestamp and confirmation number
 
 ### 6. Database Integration for Application Tracking
+
 - [ ] Set up SQLite/PostgreSQL database schema
 - [ ] Create tables: `jobs`, `applications`, `resume_versions`, `notifications`
 - [ ] Implement CRUD operations for job applications
@@ -632,6 +628,7 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] Implement data export (CSV, JSON)
 
 ### 7. Dashboard UI for Job Application Tracking
+
 - [ ] Build React dashboard with categories:
   - **Applied** - Successfully submitted applications
   - **In-Transit/Pending** - Applications in progress
@@ -649,9 +646,16 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] Export reports in PDF format
 
 ### 8. Additional Enhancements
+
 - [ ] CI/CD pipeline with GitHub Actions
 - [ ] Electron packaging for Windows/macOS/Linux
 - [ ] Multi-language support (i18n)
+- [ ] Dark mode theme
+- [ ] API rate limiting and caching
+- [ ] WebSocket for real-time updates
+- [ ] End-to-end testing with Playwright Test
+- [ ] Performance monitoring and analytics
+
 ---
 
 ## 📄 License
@@ -671,11 +675,3 @@ Give a ⭐️ if this project helped you!
   <br><br>
   Made with ❤️ by the FastTrackJobs Team
 </div>
-
-MIT
-
----
-
-**FastTrackJobs** - Automate your job search with AI-powered workflows 🚀
- 
- 
