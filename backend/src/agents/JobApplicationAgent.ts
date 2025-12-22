@@ -80,9 +80,13 @@ export class JobApplicationAgent {
       }
       
       // Node 5: Auto-Apply (optional)
+      console.log(`[Agent] Checking auto-apply: options.autoApply = ${state.options?.autoApply}`);
       if (state.options?.autoApply === true) {
+        console.log(`[Agent] ✅ Auto-apply enabled, starting Node 5...`);
         state = await this.runNode(state, "Node 5: Auto-Apply", autoApplyNode);
         // Auto-apply failure is not critical (can apply manually)
+      } else {
+        console.log(`[Agent] ⏭️ Auto-apply skipped (autoApply = ${state.options?.autoApply})`);
       }
       
       // Mark as complete

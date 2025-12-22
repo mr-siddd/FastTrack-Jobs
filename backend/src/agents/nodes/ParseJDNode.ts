@@ -6,6 +6,7 @@ import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { z } from "zod";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
+import { getFormattingInstructions } from "../../lib/resume-formatting-guidelines";
 
 // Storage directory for parsed JDs
 const STORAGE_DIR = process.env.APP_STORAGE_DIR || join(process.env.HOME || process.env.USERPROFILE || '.', '.fasttrack', 'parsed_jds');
@@ -63,6 +64,17 @@ INSTRUCTIONS:
 6. Identify keywords that would appear in an ATS (Applicant Tracking System)
 7. Be thorough - include everything relevant
 
+IMPORTANT - RESUME FORMATTING CONTEXT:
+The parsed information will be used to tailor a resume that follows strict formatting guidelines.
+{formattingInstructions}
+
+When extracting skills, think about how they will be grouped in the resume:
+- Frontend skills (React, Angular, Vue, etc.)
+- Backend skills (Node.js, Python, Java, etc.)  
+- Database skills (MongoDB, PostgreSQL, etc.)
+- DevOps/Cloud skills (Docker, AWS, Kubernetes, etc.)
+- Tools & Methodologies (Git, Agile, etc.)
+
 {format_instructions}
 
 OUTPUT (JSON only):
@@ -93,11 +105,14 @@ export async function parseJDNode(
     
     console.log(`[Node 2] Using AI provider: ${aiProvider}`);
     
-    // Format the prompt
+    // Format the prompt with formatting instructions
     const formatInstructions = parser.getFormatInstructions();
+    const formattingInstructions = getFormattingInstructions();
+    
     const prompt = await parseJDPrompt.format({
       jobText: state.extractedJD.rawText,
       format_instructions: formatInstructions,
+      formattingInstructions: formattingInstructions,
     });
     
     console.log("[Node 2] Sending to AI for parsing...");

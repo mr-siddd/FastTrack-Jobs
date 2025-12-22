@@ -3,7 +3,7 @@ import { defaultItem, defaultUrl, itemSchema, urlSchema } from "../shared";
 
 /**
  * Project schema - Personal and professional projects
- * Contains project name, description, dates, keywords, and URL
+ * Contains project name, description, dates, keywords, URL, and highlights (bullet points)
  */
 export const projectSchema = itemSchema.extend({
   name: z.string(),
@@ -12,6 +12,7 @@ export const projectSchema = itemSchema.extend({
   summary: z.string(),
   keywords: z.array(z.string()).default([]),
   url: urlSchema,
+  highlights: z.array(z.string()).optional().default([]), // Bullet points for achievements
 });
 
 // Type
@@ -26,4 +27,5 @@ export const defaultProject: Project = {
   summary: "",
   keywords: [],
   url: defaultUrl,
+  highlights: [],
 };

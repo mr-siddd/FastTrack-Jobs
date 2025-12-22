@@ -3,7 +3,7 @@ import { defaultItem, defaultUrl, itemSchema, urlSchema } from "../shared";
 
 /**
  * Experience schema - Work experience entries
- * Contains company, position, dates, location, and summary
+ * Contains company, position, dates, location, summary, and highlights (bullet points)
  */
 export const experienceSchema = itemSchema.extend({
   company: z.string().min(1),
@@ -12,6 +12,7 @@ export const experienceSchema = itemSchema.extend({
   date: z.string(),
   summary: z.string(),
   url: urlSchema,
+  highlights: z.array(z.string()).optional().default([]), // Bullet points for achievements
 });
 
 // Type
@@ -26,4 +27,5 @@ export const defaultExperience: Experience = {
   date: "",
   summary: "",
   url: defaultUrl,
+  highlights: [],
 };

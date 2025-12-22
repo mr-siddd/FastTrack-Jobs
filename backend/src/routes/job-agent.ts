@@ -67,7 +67,8 @@ export default async function jobAgentRoutes(fastify: FastifyInstance) {
         
         console.log(`\n[API] Processing job application: ${body.jobUrl}`);
         console.log(`[API] Applicant: ${userResume.basics.name}`);
-        console.log(`[API] Options:`, initialState.options);
+        console.log(`[API] Options:`, JSON.stringify(initialState.options, null, 2));
+        console.log(`[API] Auto-Apply Enabled: ${initialState.options?.autoApply === true ? 'YES ✅' : 'NO ❌'}`);
         
         // Run the agent
         const agent = new JobApplicationAgent();

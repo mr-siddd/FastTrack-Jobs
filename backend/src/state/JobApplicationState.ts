@@ -57,7 +57,7 @@ export const pdfInfoSchema = z.object({
 
 // Node 5 Output: Application Result
 export const applicationResultSchema = z.object({
-  status: z.enum(["pending", "submitted", "failed", "skipped"]),
+  status: z.enum(["pending", "submitted", "failed", "skipped", "ready_to_submit", "partial"]),
   message: z.string(),
   submittedAt: z.string().datetime().optional(),
   confirmationId: z.string().optional(),
@@ -121,9 +121,10 @@ export const jobApplicationStateSchema = z.object({
   
   // Options
   options: z.object({
-    autoApply: z.boolean().default(false),
+    autoApply: z.boolean().default(true),
     generatePDF: z.boolean().default(true),
-    aiProvider: z.enum(["openai", "gemini", "auto"]).default("auto"),
+    //aiProvider: z.enum(["openai", "gemini", "auto"]).default("auto"), // Changed to include copilot-proxy
+    aiProvider: z.enum(["openai", "gemini", "copilot-proxy", "auto"]).default("copilot-proxy"),
   }).optional(),
 });
 
@@ -149,9 +150,9 @@ export function createInitialState(
     maxRetries: 3,
     startedAt: new Date().toISOString(),
     options: {
-      autoApply: options?.autoApply ?? false,
+      autoApply: options?.autoApply ?? true,  // Changed to true to match schema default
       generatePDF: options?.generatePDF ?? true,
-      aiProvider: options?.aiProvider ?? "auto",
+      aiProvider: options?.aiProvider ?? "copilot-proxy",
     },
   };
 }
