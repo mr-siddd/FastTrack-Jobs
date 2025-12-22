@@ -1,8 +1,25 @@
-# FastTrackJobs
+# 🚀 FastTrackJobs
 
-AI-powered job application automation using LangGraph, Playwright MCP, OpenAI, and React/Electron.
+> AI-powered job application automation using LangGraph, Playwright MCP, OpenAI, and React/Electron.
 
-## Project Structure
+**Automate your job search workflow** - Extract job descriptions, tailor resumes with AI, generate professional PDFs, and auto-apply to positions with intelligent form filling.
+
+## 📋 Table of Contents
+
+- [Project Structure](#project-structure)
+- [LangGraph Approach](#langgraph-approach)
+- [Modules](#modules)
+- [Technology Stack](#️-technology-stack)
+- [Getting Started](#-getting-started)
+- [Development](#development)
+- [API Reference](#api-reference)
+- [Contributing](#-contributing)
+- [Next Steps](#next-steps)
+- [License](#license)
+
+---
+
+## 🏗️ Project Structure
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -27,7 +44,7 @@ AI-powered job application automation using LangGraph, Playwright MCP, OpenAI, a
 │         ▼                 ▼                 ▼               │
 │  ┌──────────┐      ┌──────────┐      ┌──────────┐         │
 │  │ OpenAI   │      │ Copilot  │      │   MCP    │         │
-│  │ Adapter  │      │  Proxy   │      │  Client  │         │
+│  ⚡│ Adapter  │      │  Proxy   │      │  Client  │         │
 │  └──────────┘      └──────────┘      └──────────┘         │
 │                                             │               │
 └─────────────────────────────────────────────┼───────────────┘
@@ -36,9 +53,11 @@ AI-powered job application automation using LangGraph, Playwright MCP, OpenAI, a
                                     │ Playwright MCP   │
                                     │     Server       │
                                     └────────┬─────────┘
-                                             │
-                                             ▼
-                                      [Real Browser]
+---
+
+## 📦 Modules
+
+### 🎨                                   [Real Browser]
                              Extract JD, fill forms, upload PDF
 ```
 
@@ -59,14 +78,16 @@ This project uses **LangGraph** for workflow orchestration with a **Node and Sta
 - **UI Components**: Custom components with CSS modules
 - **State Management**: React hooks
 - **HTTP Client**: Fetch API
-- **Features**: Job URL input, JD display, resume generation, application tracking dashboard
+- **⚙️ Features**: Job URL input, JD display, resume generation, application tracking dashboard
 
 ### Backend Module
 - **Runtime**: Node.js 20+
 - **Framework**: Fastify (high-performance web framework)
 - **Language**: TypeScript
 - **Workflow Engine**: LangGraph for state-based orchestration
-- **Architecture**: Modular services with dependency injection
+---
+
+## 🛠️*Architecture**: Modular services with dependency injection
 
 ### Technology Stack
 
@@ -90,9 +111,11 @@ This project uses **LangGraph** for workflow orchestration with a **Node and Sta
 - MCP (Model Context Protocol)
 
 **Development Tools:**
-- tsx (TypeScript execution)
-- ESBuild
-- Playwright browsers
+---
+
+## 🤖 Service Details: AI Integration (Workflow Orchestration)
+
+### LangGraph Workflow Engine
 
 ## Service Details: AI Integration (Workflow Orchestration)
 
@@ -124,9 +147,20 @@ The backend uses **LangGraph** to orchestrate the job application process throug
 **5. AutoApplyNode**
 - Navigates to job application page via MCP
 - Detects form fields and constraints
-- Fills fields with resume data (respecting maxLength)
-- Uploads generated PDF
-- Submits application
+---
+
+## 💻 Development
+
+Start all development servers and the Electron app:
+
+```bash
+# Run all modules concurrently
+yarn dev
+```
+
+Or start individual modules:
+
+### Frontend Development Server
 - Outputs: `applicationStatus`
 # Development
 
@@ -137,7 +171,89 @@ cd backend
 npm run dev
 ```
 
-Backend runs on http://127.0.0.1:4000
+---
+
+## 📚 API Reference
+
+### POST /api/extract-job
+
+Extract and parse job description from URL.
+
+**Request:**
+```json
+{ 
+  "jobUrl": "https://example.com/job" 
+}
+```
+
+**Response:**
+```json
+{
+  "jobId": "job-1234567890",
+  "url": "https://example.com/job",
+  "jd": {
+    "title": "Software Engineer",
+    "company": "ExampleCorp",
+    "location": "Remote",
+    "responsibilities": ["Build features", "..."],
+    "requiredSkills": ["TypeScript", "React"],
+    "niceToHaveSkills": ["GraphQL"],
+    "summary": "..."
+  },
+  "rawText": "..."
+}
+```
+
+### POST /api/generate-resume
+
+Generate tailored resume PDF from job description.
+
+**Request:**
+```json
+---
+
+{
+  "resumeJson": { "name": "...", "contact": {...}, ... },
+  "jd": { "title": "...", "company": "..." }
+}
+```
+
+**Response:**
+```json
+{
+  "resumeJson": { ... },
+  "resumePdfPath": "C:\\Users\\You\\.fasttrack\\YourName_SoftwareEngineer_Company.pdf",
+  "resumePdfUrl": "file://C:\\Users\\You\\.fasttrack\\YourName_SoftwareEngineer_Company.pdf"
+}
+```
+
+### POST /api/apply
+
+Auto-apply to job with tailored resume.
+
+**Request:**
+```json
+{
+  "jobUrl": "https://example.com/job",
+  "resumeJson": { ... },
+  "resumePdfPath": "C:\\Users\\You\\.fasttrack\\..."
+}
+```
+
+**Response:**
+```json
+{
+  "taskId": "task-1234567890",
+  "status": "started",
+  "message": "Application process initiated"
+}
+```
+
+---
+---
+
+### 📁
+## 🎯 Technology Stack127.0.0.1:4000
 
 **Frontend Development Server:**
 
@@ -260,9 +376,9 @@ cd frontend
 npm install
 
 # Install Playwright browsers (required for MCP)
-cd ../backend
-npx playwright install --with-deps
-```
+cd .⚙️ Configuration
+
+Create `backend/.env` file
 
 ### Configuration
 
@@ -347,6 +463,8 @@ MAX_RETRY_ATTEMPTS=3
 
 **Request:**
 ```json
+---
+
 {
   "jobUrl": "https://example.com/job",
   "resumeJson": { ... },
@@ -459,7 +577,9 @@ This is a **modular architecture** designed for scalability. When adding feature
 ### Code Standards
 
 - Use TypeScript strict mode
-- Follow ESLint and Prettier configurations
+---
+
+## 🗺️Follow ESLint and Prettier configurations
 - Write JSDoc comments for public APIs
 - Use async/await over promises
 - Handle errors gracefully with try/catch
@@ -532,13 +652,25 @@ This is a **modular architecture** designed for scalability. When adding feature
 - [ ] CI/CD pipeline with GitHub Actions
 - [ ] Electron packaging for Windows/macOS/Linux
 - [ ] Multi-language support (i18n)
-- [ ] Dark mode theme
-- [ ] API rate limiting and caching
-- [ ] WebSocket for real-time updates
-- [ ] End-to-end testing with Playwright Test
-- [ ] Performance monitoring and analytics
+---
 
-## License
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 🌟 Show Your Support
+
+Give a ⭐️ if this project helped you!
+
+---
+
+<div align="center">
+  <strong>FastTrackJobs</strong> - Automate your job search with AI-powered workflows 🚀
+  <br><br>
+  Made with ❤️ by the FastTrackJobs Team
+</div>
 
 MIT
 

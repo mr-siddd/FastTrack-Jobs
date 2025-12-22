@@ -411,6 +411,16 @@ async function fillFormFields(page: Page, mappedData: Record<string, string>): P
  */
 async function uploadResume(page: Page, selector: string, filePath: string): Promise<void> {
   try {
+    // Check if file exists first
+    const fs = await import('fs/promises');
+    try {
+      await fs.stat(filePath);
+    } catch (statError) {
+      console.warn(`[Node 5] ⚠️ Resume file not found: ${filePath}`);
+      console.warn("[Node 5] Skipping resume upload...");
+      return;
+    }
+
     const fileInput = await page.$(selector);
     if (fileInput) {
       await fileInput.setInputFiles(filePath);
